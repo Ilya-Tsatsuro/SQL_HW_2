@@ -1,18 +1,8 @@
-# SQL_HW_2
-## CREATE, INSERT, ALTER
-
-### Таблица employees
-1. Создать таблицу employees.
-- id. serial,  primary key,
-- employee_name. Varchar(50), not null
-```sql
 create table employees(
 	id serial primary key,
 	employee_name Varchar(50) not null
 );
-```
-2. Наполнить таблицу employee 70 строками.
-```SQL
+
 insert into employees (employee_name)
 values 
 ('Василий'),
@@ -85,37 +75,12 @@ values
 ('Оксана'),
 ('Анастасия'),
 ('Надежда');
-```
 
-### Таблица salary
-3. Создать таблицу salary.
-- id. Serial  primary key,
-- monthly_salary. Int, not null
-```sql
 create table salary(
 	id serial primary key,
 	monthly_salary Int not null
 );
-```
-4. Наполнить таблицу salary 15 строками:
-- 1000
-- 1100
-- 1200
-- 1300
-- 1400
-- 1500
-- 1600
-- 1700
-- 1800
-- 1900
-- 2000
-- 2100
-- 2200
-- 2300
-- 2400
-- 2500
 
-```SQL 
 insert into salary (monthly_salary)
 values 
 (1000),
@@ -133,24 +98,13 @@ values
 (2200),
 (2300),
 (2400);
-```
 
-## Таблица employee_salary
-5. Создать таблицу employee_salary.
-- id. Serial  primary key,
-- employee_id. Int, not null, unique
-- salary_id. Int, not null
-```SQL
 create table employee_salary(
 	id serial primary key,
 	employee_id int not null unique,
 	salary_id int not null
 	);
-```
 
-6. Наполнить таблицу employee_salary 40 строками:
-- в 10 строк из 40 вставить несуществующие employee_id
-```SQL
 insert into employee_salary (employee_id, salary_id)
 values 
 (38,14),
@@ -162,7 +116,7 @@ values
 (88,9),
 (40,10),
 (5,5),
-(32,16),
+(32,13),
 (77,6),
 (13,13),
 (22,1),
@@ -174,7 +128,7 @@ values
 (29,11),
 (4,3),
 (33,5),
-(17,16),
+(17,11),
 (27,6),
 (73,13),
 (9,1),
@@ -193,25 +147,15 @@ values
 (102,12),
 (14,9),
 (78,10);
-```
 
-### Таблица roles
-7. Создать таблицу roles.
-- id. Serial  primary key,
-- role_name. int, not null, unique
-```SQL
 create table roles(
 	id Serial primary key,
 	role_name int not null unique
 );
-```
-8. Поменять тип столба role_name с int на varchar(30).
-```SQL
+
 ALTER TABLE roles
 ALTER COLUMN role_name TYPE varchar(30);
-```
-9. Наполнить таблицу roles 20 строками:
-```SQL
+
 insert into roles(role_name)
 values 
 ('Junior Python developer'),
@@ -234,14 +178,7 @@ values
 ('Junior Automation QA engineer'),
 ('Middle Automation QA engineer'),
 ('Senior Automation QA engineer');
-```
 
-### Таблица roles_employee
-10. Создать таблицу roles_employee.
-- id. Serial  primary key,
-- employee_id. Int, not null, unique (внешний ключ для таблицы employees, поле id)
-- role_id. Int, not null (внешний ключ для таблицы roles, поле id)
-```SQL
 create table roles_employee(
 	id Serial primary key,
 	employee_id Int not null unique, 
@@ -251,9 +188,7 @@ create table roles_employee(
 	foreign key (role_id)
 		references roles(id)
 );
-```
-11. Наполнить таблицу roles_employee 40 строками:
-```SQL
+
 insert into roles_employee(employee_id, role_id)
 values 
 (38,17),
@@ -296,156 +231,123 @@ values
 (26,14),
 (14,13),
 (37,5);
-```
-Для просмотра созданных таблиц.
-```SQL
+
 select * from employees;
 select * from salary;
 select * from employee_salary;
 select  * from roles;
 select * from roles_employee;
-```
 
-Удалить созданную таблицу.
-```SQL
-DROP TABLE table_name;
-```
-
-Обновить параметры таблицы.
-```SQL
-ALTER TABLE table_name
-ADD column_name datatype; - варианты
-DROP COLUMN column_name; - варианты
-ALTER COLUMN column_name datatype; - варианты
-```
-
-Обновить данные в существующей таблице.
-```SQL
-UPDATE table_name
-SET column1 = value1, column2 = value2, ...
-WHERE condition;
-```
-
-Удалить данные в существующей таблице.
-```SQL
-DELETE FROM table_name WHERE condition;
-```
+--DROP TABLE table_names;
+DROP TABLE employee_salary;
+---------------------------
+UPDATE employee_salary
+SET salary_id = 15, 
+WHERE id = 15;
 
 
+-- SQL HomeWork 2. Joins
 
-# Joins
+select * from employees;
+select * from salary;
+select * from employee_salary;
+select * from roles;
+select * from roles_employee;
 
-1. Вывести всех работников, чьи зарплаты есть в базе вместе с зарплатами.
-```SQL
+ -- 1. Вывести всех работников чьи зарплаты есть в базе, вместе с зарплатами.
 select employees.employee_name, salary.monthly_salary 
 from employees
 join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id
 ;
-```
 
-2. Вывести всех работников, у которых ЗП меньше 2000.
-```SQL
+ -- 2. Вывести всех работников у которых ЗП меньше 2000.
 select employees.employee_name, salary.monthly_salary 
 from employees
 join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id
 where salary.monthly_salary < 2000
 ;
-```
 
-3. Вывести все зарплатные позиции, но работник по ним не назначен. (ЗП есть, но не понятно кто её получает).
-```SQL
+ -- 3. Вывести все зарплатные позиции, но работник по ним не назначен. (ЗП есть, но не понятно кто её получает.)
 select employees.employee_name, salary.monthly_salary 
 from employees
 right join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id
 where employees.employee_name is null
 ;
-```
 
-4. Вывести все зарплатные позиции  меньше 2000, но работник по ним не назначен. (ЗП есть, но не понятно кто её получает).
-```SQL
+ -- 4. Вывести все зарплатные позиции  меньше 2000 но работник по ним не назначен. (ЗП есть, но не понятно кто её получает.)
 select employees.employee_name, salary.monthly_salary 
 from employees
 right join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id
 where employees.employee_name is null and salary.monthly_salary < 2000
 ;
-```
 
-5. Найти всех работников, кому не начислена ЗП.
-```SQL
+-- 5. Найти всех работников кому не начислена ЗП.
 select employees.employee_name, salary.monthly_salary 
 from employees
 left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
 where salary.monthly_salary is null
 ;
-```
 
-6. Вывести всех работников с названиями их должности.
-```SQL
+--6. Вывести всех работников с названиями их должности (включая работников без должности).
 select employees.employee_name, roles.role_name 
 from employees 
 left join roles_employee on employees.id = roles_employee.employee_id
 left join roles on roles.id  = roles_employee.role_id
 ;
-```
 
-7. Вывести имена и должность только Java разработчиков.
-```SQL 
+--6. Вывести всех работников с названиями их должности.
 select employees.employee_name, roles.role_name 
 from employees 
-left join roles_employee on employees.id = roles_employee.employee_id
-left join roles on roles.id  = roles_employee.role_id
-where roles.role_name like '%Java%'
+join roles_employee on employees.id = roles_employee.employee_id
+join roles on roles.id  = roles_employee.role_id
 ;
-```
 
-8. Вывести имена и должность только Python разработчиков.
-```SQL
+--7. Вывести имена и должность только Java разработчиков.
 select employees.employee_name, roles.role_name 
 from employees 
-left join roles_employee on employees.id = roles_employee.employee_id
-left join roles on roles.id  = roles_employee.role_id
+join roles_employee on employees.id = roles_employee.employee_id
+join roles on roles.id  = roles_employee.role_id
+where roles.role_name like '%Java %'
+;
+
+--8. Вывести имена и должность только Python разработчиков.
+select employees.employee_name, roles.role_name 
+from employees 
+join roles_employee on employees.id = roles_employee.employee_id
+join roles on roles.id  = roles_employee.role_id
 where roles.role_name like '%Python%'
 ;
-```
 
-9. Вывести имена и должность всех QA инженеров.
-```SQL
+--9. Вывести имена и должность всех QA инженеров.
 select employees.employee_name, roles.role_name 
 from employees 
-left join roles_employee on employees.id = roles_employee.employee_id
-left join roles on roles.id  = roles_employee.role_id
+join roles_employee on employees.id = roles_employee.employee_id
+join roles on roles.id  = roles_employee.role_id
 where roles.role_name like '%QA%'
 ;
-```
 
-10. Вывести имена и должность ручных QA инженеров.
-```SQL
+--10. Вывести имена и должность ручных QA инженеров.
 select employees.employee_name, roles.role_name 
 from employees 
-left join roles_employee on employees.id = roles_employee.employee_id
-left join roles on roles.id  = roles_employee.role_id
+join roles_employee on employees.id = roles_employee.employee_id
+join roles on roles.id  = roles_employee.role_id
 where roles.role_name  like '%Manual%QA%'
 ;
-```
 
-
-11. Вывести имена и должность автоматизаторов QA.
-```SQL
+--11. Вывести имена и должность автоматизаторов QA
 select employees.employee_name, roles.role_name 
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
 join roles on roles.id  = roles_employee.role_id
 where roles.role_name like '%Automation%QA%'
 ;
-```
 
-12. Вывести имена и зарплаты всех специалистов (для проверки).
-```SQL
+--12. Вывести имена и зарплаты всех
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -453,10 +355,9 @@ join roles on roles.id  = roles_employee.role_id
 left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
 ;
-```
 
-13. Вывести имена и зарплаты Junior специалистов.
-```SQL
+
+--12. Вывести имена и зарплаты Junior специалистов
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -465,11 +366,9 @@ left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
 where roles.role_name like '%Junior%'
 ;
-```
-Добавлено поле role_name для для проверки.
+-- Добавлено поле role_name для для проверки.
 
-14. Вывести имена и зарплаты Middle специалистов.
-```SQL
+--13. Вывести имена и зарплаты Middle специалистов
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -478,10 +377,8 @@ left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
 where role_name like '%Middle%'
 ;
-```
 
-15. Вывести имена и зарплаты Senior специалистов.
-```SQL
+--14. Вывести имена и зарплаты Senior специалистов
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -490,58 +387,44 @@ left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
 where role_name like '%Senior%'
 ;
-```
 
-16. Вывести зарплаты Java разработчиков.
-```SQL
+--15. Вывести зарплаты Java разработчиков
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
 join roles on roles.id  = roles_employee.role_id
 left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
-where role_name like '%Java developer'
-;
-```
+where role_name like '%Java developer';
 
-17. Вывести зарплаты Python разработчиков.
-```SQL
+--16. Вывести зарплаты Python разработчиков
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
 join roles on roles.id  = roles_employee.role_id
 left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
-where role_name like '%Python%'
-;
-```
+where role_name like '%Python%';
 
-18. Вывести имена и зарплаты Junior Python разработчиков.
-```SQL
+--17. Вывести имена и зарплаты Junior Python разработчиков
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
 join roles on roles.id  = roles_employee.role_id
 left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
-where role_name like '%Junior_Python%'
-;
-```
+where role_name like '%Junior_Python%';
 
-19. Вывести имена и зарплаты Middle JS разработчиков.
-```SQL
+--18. Вывести имена и зарплаты Middle JS разработчиков
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
 join roles on roles.id  = roles_employee.role_id
 left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
-where role_name like '%Middle JavaScript developer'
-;
-```
+where role_name like '%Middle JavaScript developer';
 
-20. Вывести имена и зарплаты Senior Java разработчиков.
-```SQL
+--19. Вывести имена и зарплаты Senior Java разработчиков
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -550,10 +433,8 @@ left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
 where role_name like '%Senior_Java dev%'
 ;
-```
 
-21. Вывести зарплаты Junior QA инженеров.
-```SQL
+--20. Вывести зарплаты Junior QA инженеров
 select employees.employee_name, roles.role_name, salary.monthly_salary  
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -562,10 +443,8 @@ left join employee_salary on employees.id  = employee_salary.employee_id
 left join salary on salary_id = salary.id
 where role_name like '%Junior%QA%'
 ;
-```
 
- 22. Вывести среднюю зарплату всех Junior специалистов.
-```SQL
+-- 21. Вывести среднюю зарплату всех Junior специалистов.
 select avg(salary.monthly_salary)
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -574,10 +453,8 @@ join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id 
 where role_name like '%Junior%'
 ;
-```
 
-23. Вывести сумму зарплат JS разработчиков.
-```SQL
+-- 22. Вывести сумму зарплат JS разработчиков.
 select sum(salary.monthly_salary)
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -586,34 +463,26 @@ join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id 
 where role_name like '%JavaScript dev%'
 ;
-```
 
- 24. Вывести минимальную ЗП QA инженеров.
-```SQL
+-- 23. Вывести минимальную ЗП QA инженеров.
 select min(salary.monthly_salary)
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
 join roles on roles.id  = roles_employee.role_id
 join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id 
-where role_name like '%QA%'
-;
-```
+where role_name like '%QA%';
 
- 25. Вывести максимальную ЗП QA инженеров.
-```SQL
+-- 24. Вывести максимальную ЗП QA инженеров.
 select max(salary.monthly_salary)
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
 join roles on roles.id  = roles_employee.role_id
 join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id 
-where role_name like '%QA%'
-;
-```
+where role_name like '%QA%';
 
- 26. Вывести количество QA инженеров.
-```SQL
+-- 25. Вывести количество QA инженеров.
 select count(roles.role_name)
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -622,10 +491,8 @@ join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id 
 where role_name like '%QA%'
 ;
-```
 
-27. Вывести количество Middle специалистов.
-```SQL
+--26. Вывести количество Middle специалистов.
 select count(employees.employee_name)
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -634,10 +501,8 @@ join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id 
 where role_name like '%Middle%'
 ;
-```
 
-28. Вывести количество разработчиков.
-```SQL
+--27. Вывести количество разработчиков.
 select count(employees.employee_name)
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -646,10 +511,8 @@ join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id 
 where role_name like '%developer%'
 ;
-```
 
-29. Вывести фонд (сумму) зарплаты разработчиков.
-```SQL
+--28. Вывести фонд (сумму) зарплаты разработчиков.
 select sum(salary.monthly_salary)
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -658,10 +521,9 @@ join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id 
 where role_name like '%developer%'
 ;
-```
 
-30. Вывести имена, должности и ЗП всех специалистов по возрастанию.
-```SQL
+
+--29. Вывести имена, должности и ЗП всех специалистов по возрастанию.
 select employees.employee_name, roles.role_name, salary.monthly_salary 
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -670,10 +532,8 @@ join employee_salary on employees.id  = employee_salary.employee_id
 join salary on salary_id = salary.id 
 ORDER by (salary.monthly_salary)
 ;
-```
 
- 31. Вывести имена, должности и ЗП всех специалистов по возрастанию, у которых ЗП от 1700 до 2300.
-```SQL
+-- 30. Вывести имена, должности и ЗП всех специалистов по возрастанию у специалистов у которых ЗП от 1700 до 2300.
 select employees.employee_name, roles.role_name, salary.monthly_salary 
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -683,10 +543,8 @@ join salary on salary_id = salary.id
 where salary.monthly_salary between 1700 and 2300
 ORDER by (salary.monthly_salary)
 ;
-```
 
-32. Вывести имена, должности и ЗП всех специалистов по возрастанию, у которых ЗП меньше 2300.
-```SQL
+-- 31. Вывести имена, должности и ЗП всех специалистов по возрастанию у специалистов у которых ЗП меньше 2300.
 select employees.employee_name, roles.role_name, salary.monthly_salary 
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -696,10 +554,8 @@ join salary on salary_id = salary.id
 where salary.monthly_salary < 2300
 ORDER by (salary.monthly_salary)
 ;
-```
 
- 33. Вывести имена, должности и ЗП всех специалистов по возрастанию, у которых ЗП равна 1100, 1500, 2000.
-```SQL
+-- 32. Вывести имена, должности и ЗП всех специалистов по возрастанию у специалистов у которых ЗП равна 1100, 1500, 2000.
 select employees.employee_name, roles.role_name, salary.monthly_salary 
 from employees 
 join roles_employee on employees.id = roles_employee.employee_id
@@ -709,4 +565,3 @@ join salary on salary_id = salary.id
 where salary.monthly_salary in (1100, 1500, 2000)
 ORDER by (salary.monthly_salary)
 ;
-```
